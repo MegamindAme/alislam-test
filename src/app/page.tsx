@@ -7,7 +7,7 @@ import moment from "moment-timezone";
 export default function Home() {
     const [latitude, setLatitude] = useState<string>("45.530007");
     const [longitude, setLongitude] = useState<string>("-73.698725");
-    const [prayerTimes, setPrayerTimes] = useState<PrayerTimes>(null);
+    const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
 
     const fetchData = async () => {
         try {
@@ -17,7 +17,7 @@ export default function Home() {
                 throw new Error(`HTTP error Status: ${response.status}`);
             }
 
-            const prayers: PrayerTimes = await response.json();
+            const prayers: PrayerTimes | null = await response.json();
             setPrayerTimes(prayers);
         } catch (error) {
             console.error('Error fetching prayer times:', error);
@@ -29,7 +29,7 @@ export default function Home() {
         console.log(longitude)
     }, [latitude, longitude]);
 
-    const toTimeZone = (milliseconds, timezone) => {
+    const toTimeZone = (milliseconds: number, timezone: string) => {
         const momentObj = moment(milliseconds);
         return momentObj.tz(timezone).format('HH:mm:ss');
     }
